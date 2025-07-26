@@ -1,0 +1,6 @@
+- delete karyawan error unlink pp
+- kurir pengataran / ambil
+- laundary call (jasa pengambilan) / ots( langsung diantar customer sendiri ke cabang)
+- hitung otomatisasi ongkri dengan KM
+- membership customer (vip)
+-
