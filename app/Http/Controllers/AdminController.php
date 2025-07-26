@@ -165,6 +165,28 @@ class AdminController extends Controller
         if (Customer::where('id_user', $kry->id)->exists()) {
             return redirect()->back()->withErrors(['errors' => 'Data gagal dihapus, data masih memiliki relasi. Jika tidak digunakan silahkan edit dan non aktifkan status']);
         }
+        dd($id);
+        // buat pengecekan setiap users yang akan dihapus cek dulu dia punya gambar atau tidak?, jika ada maka hapus gambar , jika tidak ada langsung delte saja //
+        use Illuminate\Support\Facades\File;
+
+public function destroy($id)
+{
+    $user = User::findOrFail($id);
+
+    if ($user->photo) {
+        $path = public_path('images/users/' . $user->photo);
+
+        // Cek apakah file ada di folder
+        if (File::exists($path)) {
+            File::delete($path); // Hapus file
+        }
+    }
+
+    $user->delete(); // Hapus user dari database
+
+    return redirect()->back()->with('success', 'User berhasil dihapus');
+}
+
         $path = public_path() . "/images/" . $kry->foto;
         if (File::exists($path)) {
             //File::delete($image_path);
