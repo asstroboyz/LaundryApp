@@ -174,7 +174,7 @@ public function destroy($id)
     $user = User::findOrFail($id);
 
     if ($user->photo) {
-        $path = public_path('images/users/' . $user->photo);
+        $path = public_path('images/users/' . $user->photo);~
 
         // Cek apakah file ada di folder
         if (File::exists($path)) {
