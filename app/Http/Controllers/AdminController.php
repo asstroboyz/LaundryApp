@@ -169,7 +169,6 @@ class AdminController extends Controller
         // buat pengecekan setiap users yang akan dihapus cek dulu dia punya gambar atau tidak?, jika ada maka hapus gambar , jika tidak ada langsung delte saja //
         
         use Illuminate\Support\Facades\File;
-
 public function destroy($id)
 {
     $user = User::findOrFail($id);
