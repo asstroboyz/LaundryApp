@@ -152,7 +152,15 @@ class AdminController extends Controller
         $adduser->save();
         return back()->with('success', 'Data Berhasil Ditambah!');
     }
+namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Customer;
+use Illuminate\Support\Facades\File;
+
+
+class UserController extends Controller
+{
     /**
      * Remove the specified resource from storage.
      *
@@ -161,39 +169,29 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        $kry = User::find($id);
-        if (Customer::where('id_user', $kry->id)->exists()) {
-            return redirect()->back()->withErrors(['errors' => 'Data gagal dihapus, data masih memiliki relasi. Jika tidak digunakan silahkan edit dan non aktifkan status']);
-        }
-        dd($id);
-        
-        use Illuminate\Support\Facades\File;
-public function destroy($id)
-{
-    $user = User::findOrFail($id);
+        $user = User::find($id);
 
-    if ($user->photo) {
-        $path = public_path('images/users/' . $user->photo);~
-
-        // Cek apakah file ada di folder
-        if (File::exists($path)) {
-            File::delete($path); // Hapus file
+        // Cek apakah user punya relasi ke customer
+        if (Customer::where('id_user', $user->id)->exists()) {
+            return redirect()->back()->withErrors([
+                'errors' => 'Data gagal dihapus, data masih memiliki relasi. Jika tidak digunakan silahkan edit dan non aktifkan status.'
+            ]);
         }
+
+        // Hapus foto jika ada
+        if ($user->photo) {
+            $path = public_path('images/users/' . $user->photo);
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+        }
+
+        // Hapus user
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User berhasil dihapus');
     }
-
-    $user->delete(); // Hapus user dari database
-
-    return redirect()->back()->with('success', 'User berhasil dihapus');
 }
-
-        $path = public_path() . "/images/" . $kry->foto;
-        if (File::exists($path)) {
-            //File::delete($image_path);
-            unlink($path);
-        }
-        $kry->delete();
-        return back()->with('success', 'Data Berhasil Dihapus!');
-    }
 
     public function dataharga()
     {
