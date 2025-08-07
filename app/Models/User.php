@@ -60,3 +60,28 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\DetailOrder');
     }
 }
+
+{
+    {
+        $user = User::find($id);
+
+        // Cek relasi dengan customer
+        if (Customer::where('id_user', $user->id)->exists()) {
+            return redirect()->back()->withErrors([
+                'errors' => 'Data gagal dihapus, data masih memiliki relasi.'
+            ]);
+        }
+
+        // Hapus foto jika ada
+        if ($user->photo) {
+            $path = public_path('images/users/' . $user->photo);
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+        }
+
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User berhasil dihapus');
+    }
+}
