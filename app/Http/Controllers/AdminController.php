@@ -152,46 +152,10 @@ class AdminController extends Controller
         $adduser->save();
         return back()->with('success', 'Data Berhasil Ditambah!');
     }
-namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Support\Facades\File;
-
-
-class UserController extends Controller
-{
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = User::find($id);
-
-        // Cek apakah user punya relasi ke customer
-        if (Customer::where('id_user', $user->id)->exists()) {
-            return redirect()->back()->withErrors([
-                'errors' => 'Data gagal dihapus, data masih memiliki relasi. Jika tidak digunakan silahkan edit dan non aktifkan status.'
-            ]);
-        }
-
-        // Hapus foto jika ada
-        if ($user->photo) {
-            $path = public_path('images/users/' . $user->photo);
-            if (File::exists($path)) {
-                File::delete($path);
-            }
-        }
-
-        // Hapus user
-        $user->delete();
-
-        return redirect()->back()->with('success', 'User berhasil dihapus');
-    }
-}
 
     public function dataharga()
     {
