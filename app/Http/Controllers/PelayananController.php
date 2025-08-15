@@ -27,6 +27,7 @@ class PelayananController extends Controller
     //Transaction Datatable
     public function index(Request $request)
     {
+        
         if ($request->ajax()) {
             if (Auth::user()->level == 'karyawan') {
                 $data = DetailOrder::groupBy('id_order')->with('order')->with('hargas')->with('customer')
