@@ -221,13 +221,26 @@ class PelayananController extends Controller
                 $order->disc            = $request->disc;
                 $hitung                 = ($order->jumlah * $order->harga);
                 $disc                   = ($hitung * $order->disc) / 100;
-                $total                  = $hitung - $disc;
+
+                // $total                  = $hitung - $disc;
+                 $disc_member = $request->disc_member ?? 0;
+                 
+            $order->disc_member = $disc_member;
+
+            $hitung = $order->jumlah * $order->harga;
+            $disc = ($hitung * $order->disc) / 100;
+            $disc_member_amount = ($hitung * $disc_member) / 100;
+
+            // total harga akhir setelah diskon biasa dan diskon member
+            $total = $hitung - $disc - $disc_member_amount;
                 $order->harga_akhir     = $total;
                 $order->save();
 
                 return redirect()->route('detail.order')->with('success', 'Data Laundry Berhasil Ditambah');
             } catch (\Throwable $e) {
-                return back()->withErrors(['error' => 'Gagal menyimpan data']);
+                // return back()->withErrors(['error' => 'Gagal menyimpan data']);
+                    return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+
             }
         } else {
             return redirect('/home');
@@ -270,6 +283,7 @@ class PelayananController extends Controller
                 'satuan' => $value->satuan,
                 'harga' => $value->harga,
                 'disc' => $value->disc,
+                'disc_member' => $value->disc_member, 
                 'harga_akhir' => $value->harga_akhir,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()

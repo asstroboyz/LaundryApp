@@ -127,18 +127,21 @@ function capture() {
                             <div class="invoice-item">
                                 <div class="table-responsive">
                                     <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <td><strong>No</strong></td>
-                                                <td><strong>Jenis Cuci</strong></td>
-                                                <td><strong>Item</strong></td>
-                                                <td><strong>Layanan</strong></td>
-                                                <td><strong>Harga</strong></td>
-                                                <td><strong>Jumlah</strong></td>
-                                                <td><strong>Disc</strong></td>
-                                                <td><strong>Total</strong></td>
-                                            </tr>
-                                        </thead>
+                                       <thead>
+    <tr>
+        <td><strong>No</strong></td>
+        <td><strong>Jenis Cuci</strong></td>
+        <td><strong>Item</strong></td>
+        <td><strong>Layanan</strong></td>
+        <td><strong>Harga</strong></td>
+        <td><strong>Jumlah</strong></td>
+        <td><strong>Disc</strong></td>
+        <td><strong>Disc Member</strong></td>
+        <td><strong>Total Diskon</strong></td>
+        <td><strong>Total</strong></td>
+    </tr>
+</thead>
+
                                         <tbody>
                                             @php $i = 1; @endphp
                                             @foreach($data as $item)
@@ -149,15 +152,36 @@ function capture() {
                                                 <td>{{$item->hargas->layanan}}</td>
                                                 <td>{{Rupiah::getRupiah($item->harga)}}</td>
                                                 <td>{{$item->jumlah}}</td>
+                                              
                                                 <td>
-                                                    @if($item->disc == null)
-                                                    <span class="badge badge-danger">Tidak ada</span>
-                                                    @else
-                                                    <span class="badge badge-success">{{$item->disc.' %'}}</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{Rupiah::getRupiah($item->harga_akhir )}}
-                                                </td>
+    @if($item->disc == null)
+        <span class="badge badge-danger">Tidak ada</span>
+    @else
+        <span class="badge badge-success">{{$item->disc.' %'}}</span>
+    @endif
+</td>
+
+<td>
+    @if($item->disc_member == null || $item->disc_member == 0)
+        <span class="badge badge-danger">Tidak ada</span>
+    @else
+       <span class="badge badge-primary">{{ rtrim(rtrim(number_format($item->disc_member, 2, '.', ''), '0'), '.') }}%</span>
+
+    @endif
+</td>
+
+<td>
+    @php
+        $subtotal = $item->jumlah * $item->harga;
+        $diskonBiasa = ($item->disc / 100) * $subtotal;
+        $diskonMember = ($item->disc_member / 100) * $subtotal;
+        $totalDiskon = $diskonBiasa + $diskonMember;
+    @endphp
+    {{Rupiah::getRupiah($totalDiskon)}}
+</td>
+
+<td>{{Rupiah::getRupiah($item->harga_akhir)}}</td>
+
                                             </tr>
                                             @php $i++; @endphp
                                             @endforeach
