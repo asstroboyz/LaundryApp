@@ -50,12 +50,16 @@
                         <div class="row no-gutters">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="name">Nama Customer</label>
+                                    <label for="name">Nama Customer </label>
                                     <select name="id_customer" id="id_customer" class="form-control" required>
                                         <option value=""> Pilih Customer </option>
-                                        @foreach ($csr as $item)
-                                        <option value="{{$item->id}}">{{$item->nama}}</option>
-                                        @endforeach
+                                       @foreach ($csr as $item)
+<option value="{{$item->id}}" data-status="{{$item->membership_status}}" data-category="{{$item->membership_category}}">
+    {{$item->nama}}
+</option>
+
+@endforeach
+
                                     </select>
                                 </div>
                             </div>
@@ -128,7 +132,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="disc">Diskon</label>
-                                    <input type="number" name="disc" placeholder="Diskon %" class="form-control">
+<input type="number" name="disc" placeholder="Diskon %" class="form-control" max="50" min="0" required>
                                 </div>
                             </div>
                             <!-- <div class="col-md-2">
@@ -139,7 +143,12 @@
                                     </div>
                                 </div>
                             </div> -->
-
+<div class="col-md-2">
+    <div class="form-group">
+        <label>Diskon Member (%)</label>
+        <input type="number" name="disc_member" id="disc_member" class="form-control" readonly>
+    </div>
+</div>
                         </div>
                         <span id="id_harga"></span>
                         <input type="hidden" name="tgl">
@@ -156,9 +165,38 @@
     </div>
 </div>
 
+
 <script>
 $(document).ready(function() {
     $('#id_customer, #jenis_ajax').select2();
+
+    $('#id_customer').on('change', function () {
+        const selected = $(this).find('option:selected');
+        const status   = selected.data('status');   // 1 = member, 0/null = non member
+        const category = selected.data('category'); // Silver/Gold/Platinum/null
+        const nama     = selected.text();
+
+        if (status == 1) {
+            console.log(`✅ ${nama} adalah Member (${category})`);
+            $('#disc_member').val(
+                category === 'Silver'   ? 2 :
+                category === 'Gold'     ? 6 :
+                category === 'Platinum' ? 10 : 0
+            );
+        } else {
+            console.log(`❌ ${nama} bukan member`);
+            $('#disc_member').val(0);
+        }
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#id_customer, #jenis_ajax').select2();
+
+  
+
 });
 
 

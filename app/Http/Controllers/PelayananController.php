@@ -176,7 +176,7 @@ class PelayananController extends Controller
             $csr = Customer::whereHas('user', function ($query) {
                 $query->where('id_cabang', Auth::user()->id_cabang);
             })->get();
-
+// dd($csr->toArray());
             //('id_user', auth::user()->id)->get();
             return view('karyawan.transaksi.order-create', compact('harga', 'csr'));
         } else {
@@ -398,6 +398,10 @@ class PelayananController extends Controller
                 $addplg->nama = $request->nama;
                 $addplg->alamat = $request->alamat;
                 $addplg->hp =  $request->hp;
+                $addplg->membership_status = $request->membership_status;
+    $addplg->membership_category = $request->membership_status === '1'
+        ? $request->membership_category
+        : null;
                 $addplg->save();
 
                 return back()->with('success', 'Data Customer Berhasil Ditambah');

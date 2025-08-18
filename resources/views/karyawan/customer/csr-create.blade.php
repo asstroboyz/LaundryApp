@@ -43,6 +43,29 @@
                                         placeholder="Alamat" value="" required></textarea>
                                 </div>
                             </div>
+<!-- STATUS MEMBERSHIP -->
+<div class="col-lg-4 col-xl-4 col-12">
+    <div class="form-group">
+        <label for="membership_status">Status Membership</label>
+        <select class="form-control" id="membership_status" name="membership_status" required>
+            <option value="0" selected>Tidak Aktif</option>
+            <option value="1">Aktif</option>
+        </select>
+    </div>
+</div>
+
+<!-- KATEGORI MEMBERSHIP -->
+<div class="col-lg-4 col-xl-4 col-12" id="membership_category_container">
+    <div class="form-group">
+        <label for="membership_category">Kategori Membership</label>
+        <select class="form-control" id="membership_category" name="membership_category">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="Silver">Silver</option>
+            <option value="Gold">Gold</option>
+            <option value="Platinum">Platinum</option>
+        </select>
+    </div>
+</div>
 
                         </div>
                     </div>

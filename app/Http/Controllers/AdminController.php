@@ -159,21 +159,22 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+ 
+ public function destroy($id)
     {
         $kry = User::find($id);
         if (Customer::where('id_user', $kry->id)->exists()) {
             return redirect()->back()->withErrors(['errors' => 'Data gagal dihapus, data masih memiliki relasi. Jika tidak digunakan silahkan edit dan non aktifkan status']);
         }
-        $path = public_path() . "/images/" . $kry->foto;
-        if (File::exists($path)) {
-            //File::delete($image_path);
-            unlink($path);
+        if ($kry->foto) {
+            $path = public_path("images/" . $kry->foto);
+            if (File::exists($path)) {
+                File::delete($path);
+            }
         }
         $kry->delete();
         return back()->with('success', 'Data Berhasil Dihapus!');
     }
-
     public function dataharga()
     {
         if (Auth::user()->level == "admin") {
